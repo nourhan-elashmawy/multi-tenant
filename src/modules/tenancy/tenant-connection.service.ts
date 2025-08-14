@@ -33,18 +33,19 @@ export class TenantConnectionService implements OnModuleDestroy {
     );
     await publicConnection.initialize();
 
-    // Create Schema
-    // TO DO: switch to a built-in function instead of sql
-    await publicConnection.query(
-      `CREATE SCHEMA IF NOT EXISTS "${tenantSchema}"`,
-    );
+    const queryRunner = publicConnection.createQueryRunner();
+    await queryRunner.createSchema(tenantSchema, true); // true = IF NOT EXISTS
+    await queryRunner.release();
+
+    await publicConnection.destroy();
+
+    const tenantConnection = await this.getTenantConnection(tenantSchema);
+    await tenantConnection.synchronize();
 
     // TO DO: Remove these comments after setting up migrations
     // Get tenant connection and run migrations
     // const tenantConnection = await this.getTenantConnection(tenantSchema);
     // await tenantConnection.runMigrations();
-
-    await publicConnection.destroy();
   }
 
   async onModuleDestroy() {
