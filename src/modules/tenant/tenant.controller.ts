@@ -1,14 +1,7 @@
 import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { TenantUserService } from './services/tenant-user.service';
 import * as tenantContextMiddleware from 'src/common/middleware/tenant-context.middleware';
-import * as tenantContextMiddleware_1 from 'src/common/middleware/tenant-context.middleware';
-
-export class CreateTenantUserDto {
-  name: string;
-  email: string;
-  password: string;
-  role?: string;
-}
+import { CreateTenantUserDto } from './dto/create-tenant-user.dto';
 
 @Controller('tenant')
 export class TenantController {
@@ -38,7 +31,7 @@ export class TenantController {
   }
 
   @Get('users')
-  async getUsers(@Req() req: tenantContextMiddleware_1.TenantRequest) {
+  async getUsers(@Req() req: tenantContextMiddleware.TenantRequest) {
     return this.tenantUserService.findAll(req.tenantConnection);
   }
 }

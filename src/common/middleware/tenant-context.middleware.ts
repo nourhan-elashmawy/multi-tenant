@@ -8,7 +8,6 @@ import { JwtService } from '@nestjs/jwt';
 import { TenantConnectionService } from '../../modules/tenancy/tenant-connection.service';
 import { DataSource } from 'typeorm';
 import { JwtPayload } from 'src/modules/auth/jwt.strategy';
-
 export interface TenantRequest extends Request {
   tenantId?: number;
   tenantSchema?: string;
