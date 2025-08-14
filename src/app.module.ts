@@ -1,25 +1,38 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmConfigService } from './config/typeorm.config.service';
-import { TenantIdentificationMiddleware } from './common/middleware/tenant-identification.middleware';
+import { Module } from '@nestjs/common';
+import { DatabaseConfig } from './config/database.config';
+import { TenancyModule } from './modules/tenancy/tenancy.module';
+import { PublicModule } from './modules/public/public.module';
+import { MiddlewareConsumer } from '@nestjs/common/interfaces';
+import { TenantContextMiddleware } from './common/middleware/tenant-context.middleware';
+import { DatabaseConfigModule } from './config/database.config.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: '.env.development', isGlobal: true }),
-
-    TypeOrmModule.forRootAsync({
-      useClass: TypeOrmConfigService,
-      imports: [ConfigModule],
+    ConfigModule.forRoot({
+      envFilePath: '.env.development',
+      isGlobal: true,
     }),
+    TypeOrmModule.forRootAsync({
+      name: 'public',
+      imports: [DatabaseConfigModule],
+      useFactory: (DatabaseConfig: DatabaseConfig) =>
+        DatabaseConfig.getPublicConfig(),
+      inject: [DatabaseConfig],
+    }),
+    TenancyModule,
+    PublicModule,
+    JwtModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, DatabaseConfig],
 })
-export class AppModule implements NestModule {
+export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(TenantIdentificationMiddleware).forRoutes('*');
+    consumer.apply(TenantContextMiddleware).forRoutes('tenant/*path');
   }
 }
