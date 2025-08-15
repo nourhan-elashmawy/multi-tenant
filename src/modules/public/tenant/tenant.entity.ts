@@ -14,11 +14,11 @@ export class Tenant {
   @Column({ unique: true })
   name: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 255 })
   description: string;
 
   @Column({ unique: true })
-  schemaName: string; // Generated as: tenant_${id}
+  schemaName: string;
 
   @Column({ default: true })
   isActive: boolean;

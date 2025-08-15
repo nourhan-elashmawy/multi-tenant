@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Tenant } from './entities/tenant.entity';
-import { Admin } from './entities/admin.entity';
-import { TenantService } from './tenant.service';
+import { Tenant } from './tenant/tenant.entity';
+import { Admin } from './admin/admin.entity';
+import { TenantService } from './tenant/tenant.service';
 import { TenancyModule } from '../tenancy/tenancy.module';
 import { PublicController } from './public.controller';
 import { Repository } from 'typeorm';

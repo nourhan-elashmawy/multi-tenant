@@ -1,8 +1,9 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Tenant } from './entities/tenant.entity';
+import { Tenant } from './tenant.entity';
 import { Repository } from 'typeorm';
-import { TenantConnectionService } from '../tenancy/tenant-connection.service';
+import { TenantConnectionService } from '../../tenancy/tenant-connection.service';
+import { CreateTenantDto } from './create-tenant.dto';
 
 @Injectable()
 export class TenantService {
@@ -12,11 +13,12 @@ export class TenantService {
     private tenantConnectionService: TenantConnectionService,
   ) {}
 
-  async createTenant(name: string, description: string): Promise<Tenant> {
+  async createTenant(tenantData: CreateTenantDto): Promise<Tenant> {
+    const { name, description } = tenantData;
+
     const existingTenant = await this.tenantRepository.findOne({
       where: { name },
     });
-
     if (existingTenant) {
       throw new ConflictException(`Tenant with name '${name}' already exists`);
     }
@@ -26,7 +28,6 @@ export class TenantService {
       description,
       schemaName: this.generateSchemaName(name),
     });
-
     const savedTenant = await this.tenantRepository.save(tenant);
 
     await this.tenantConnectionService.createTenantSchema(

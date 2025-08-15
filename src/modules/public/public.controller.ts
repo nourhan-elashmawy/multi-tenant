@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
-import { TenantService } from './tenant.service';
-import { CreateTenantDto } from './dto/create-tenant.dto';
+import { TenantService } from './tenant/tenant.service';
+import { CreateTenantDto } from './tenant/create-tenant.dto';
 
 @Controller('public')
 export class PublicController {
@@ -8,10 +8,7 @@ export class PublicController {
 
   @Post('tenants')
   async createTenant(@Body() tenantData: CreateTenantDto) {
-    return this.tenantService.createTenant(
-      tenantData.name,
-      tenantData.description,
-    );
+    return this.tenantService.createTenant(tenantData);
   }
 
   @Get('tenants/:id')

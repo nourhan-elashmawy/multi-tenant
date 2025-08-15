@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
+import { ROLES } from 'src/common/constants/enums';
 
 @Entity('admins', { schema: 'public' })
 export class Admin {
@@ -23,11 +24,8 @@ export class Admin {
   @Column({ length: 255 })
   password: string;
 
-  @Column({ type: 'enum', enum: ['super_admin', 'tenant_admin'] })
+  @Column({ type: 'enum', enum: ROLES })
   role: string;
-
-  @Column({ nullable: true })
-  tenantId: number;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -43,3 +41,5 @@ export class Admin {
     }
   }
 }
+
+// admin entity currently is not related to the tenant entity
