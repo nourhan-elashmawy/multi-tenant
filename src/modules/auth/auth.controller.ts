@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { CreateUserDto } from '../user/create-user.dto';
+import { CreateTenantWithAdminDto } from '../public/CreateTenantWithAdmin.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -17,8 +17,8 @@ export class AuthController {
     return this.authService.login(loginData);
   }
 
-  @Post('register')
-  async register(@Body(ValidationPipe) registerData: CreateUserDto) {
-    return this.authService.register(registerData);
+  @Post('registerTenant')
+  async register(@Body(ValidationPipe) registerData: CreateTenantWithAdminDto) {
+    return await this.authService.registerTenant(registerData);
   }
 }

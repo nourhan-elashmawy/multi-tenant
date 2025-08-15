@@ -14,6 +14,9 @@ export class Tenant {
   @Column({ unique: true })
   name: string;
 
+  @Column({ unique: true })
+  email: string;
+
   @Column({ type: 'varchar', length: 255 })
   description: string;
 

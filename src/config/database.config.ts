@@ -14,7 +14,7 @@ export class DatabaseConfig {
       password: this.configService.get<string>('DB_PASSWORD'),
       database: this.configService.get<string>('DB_NAME'),
       schema: 'public',
-      entities: [__dirname + '/../modules/public/entities/*.entity{.ts,.js}'],
+      entities: [__dirname + '/../modules/public/**/*.entity{.ts,.js}'],
       synchronize: true,
       migrationsTableName: 'public_migrations',
       migrations: [__dirname + '/../database/migrations/public/*{.ts,.js}'],

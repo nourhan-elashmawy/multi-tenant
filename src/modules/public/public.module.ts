@@ -5,12 +5,12 @@ import { Admin } from './admin/admin.entity';
 import { TenantService } from './tenant/tenant.service';
 import { TenancyModule } from '../tenancy/tenancy.module';
 import { PublicController } from './public.controller';
-import { Repository } from 'typeorm';
+import { AdminService } from './admin/admin.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Tenant, Admin], 'public'), TenancyModule],
-  providers: [TenantService, Repository],
+  providers: [TenantService, AdminService],
   controllers: [PublicController],
-  exports: [TenantService],
+  exports: [TenantService, AdminService],
 })
 export class PublicModule {}

@@ -1,59 +1,58 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
-import { CreateUserDto } from '../user/create-user.dto';
+import { AdminService } from '../public/admin/admin.service';
+import { CreateTenantWithAdminDto } from '../public/CreateTenantWithAdmin.dto';
+import { TenantService } from '../public/tenant/tenant.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
+    private adminService: AdminService,
+    private tenantService: TenantService,
     private jwtService: JwtService,
   ) {}
 
   async login(loginData: LoginDto) {
     const { email, password } = loginData;
 
-    const user = await this.userService.findByEmail(email);
-    if (!user) {
+    const admin = await this.adminService.findByEmail(email);
+    if (!admin) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const isPasswordValid = await this.userService.validatePassword(
+    const isPasswordValid = await this.adminService.validatePassword(
       password,
-      user.password,
+      admin.password,
     );
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const payload = {
-      sub: user.id,
-      name: user.name,
-      email: user.email,
+      sub: admin.id,
+      name: admin.name,
+      email: admin.email,
+      role: admin.role,
     };
 
     return {
       access_token: this.jwtService.sign(payload),
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
+      admin: payload,
     };
   }
 
-  async register(registerData: CreateUserDto) {
-    const userExists = await this.userService.findByEmail(registerData.email);
+  async registerTenant(registerData: CreateTenantWithAdminDto) {
+    const userExists = await this.adminService.findByEmail(registerData.email);
     if (userExists) {
       throw new UnauthorizedException('Email already exists');
     }
 
-    const user = await this.userService.create(registerData);
+    const { admin } =
+      await this.tenantService.createTenantWithAdmin(registerData);
 
-    // return token -->  immediate login
     return this.login({
-      email: user.email,
+      email: admin.email,
       password: registerData.password,
     });
   }

@@ -1,2 +1,2 @@
-const ROLES = ['super_admin', 'tenant_admin'];
+const ROLES = { ADMIN: 'super_admin', TENANT: 'tenant_admin' };
 export { ROLES };

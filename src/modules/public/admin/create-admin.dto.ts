@@ -13,6 +13,7 @@ import {
 } from 'src/common/constants/passwords';
 import { ApiProperty } from '@nestjs/swagger';
 
+// name, email, password, role
 export class CreateAdminDto {
   @ApiProperty({
     description: 'Name must be between 3 and 30 characters',

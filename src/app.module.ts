@@ -10,6 +10,7 @@ import { MiddlewareConsumer } from '@nestjs/common/interfaces';
 import { TenantContextMiddleware } from './common/middleware/tenant-context.middleware';
 import { DatabaseConfigModule } from './config/database.config.module';
 import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { JwtModule } from '@nestjs/jwt';
     TenancyModule,
     PublicModule,
     JwtModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, DatabaseConfig],
