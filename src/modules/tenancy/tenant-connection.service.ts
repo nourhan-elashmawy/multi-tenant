@@ -19,7 +19,7 @@ export class TenantConnectionService implements OnModuleDestroy {
 
     // Create new connection
     const tenantConfig = this.databaseConfig.createTypeOrmOptions(tenantSchema);
-    const dataSource = new DataSource({ ...tenantConfig });
+    const dataSource = new DataSource(tenantConfig);
 
     await dataSource.initialize();
     this.connections.set(tenantSchema, dataSource);
