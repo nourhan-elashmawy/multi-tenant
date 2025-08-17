@@ -3,21 +3,20 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository, InjectDataSource } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Tenant } from './tenant.entity';
-import { TenantConnectionService } from '../../tenancy/tenant-connection.service';
 import { CreateTenantDto } from './create-tenant.dto';
 import { AdminService } from '../admin/admin.service';
 import { Admin } from '../admin/admin.entity';
+import { TenantConnectionService } from 'src/config/tenant-connection.service';
 
 @Injectable()
 export class TenantService {
   constructor(
-    @InjectRepository(Tenant, 'public')
+    @InjectRepository(Tenant)
     private tenantRepository: Repository<Tenant>,
     private tenantConnectionService: TenantConnectionService,
-    @InjectDataSource('public') private dataSource: DataSource,
     private adminService: AdminService,
   ) {}
 
@@ -28,7 +27,9 @@ export class TenantService {
       where: { name: tenantData.name },
     });
     if (existingTenant) {
-      throw new ConflictException('Tenant with name already exists');
+      throw new ConflictException(
+        `Tenant with name '${tenantData.name}' already exists`,
+      );
     }
 
     const admin = await this.adminService.findById(tenantData.adminId);
@@ -40,9 +41,15 @@ export class TenantService {
       schemaName: this.generateSchemaName(tenantData.name),
       admin: { id: tenantData.adminId } as Admin,
     });
+
     const savedTenant = await this.tenantRepository.save(tenant);
 
-    await this.tenantConnectionService.createTenantSchema(
+    // First, create the schema if it doesn't exist
+    await this.tenantConnectionService.createSchemaIfNotExists(
+      savedTenant.schemaName,
+    );
+
+    await this.tenantConnectionService.createTenantConnection(
       savedTenant.schemaName,
     );
 

@@ -1,19 +1,15 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateAdminDto } from './create-admin.dto';
 import { Admin } from './admin.entity';
-import { Tenant } from '../tenant/tenant.entity';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AdminService {
   constructor(
-    @InjectRepository(Tenant, 'public')
-    private tenantRepository: Repository<Tenant>,
-    @InjectRepository(Admin, 'public')
+    @InjectRepository(Admin)
     private adminRepository: Repository<Admin>,
-    @InjectDataSource('public') private dataSource: DataSource,
   ) {}
 
   async createAdmin(adminData: CreateAdminDto): Promise<Admin> {

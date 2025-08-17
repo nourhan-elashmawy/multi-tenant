@@ -5,7 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { TenantConnectionService } from '../../modules/tenancy/tenant-connection.service';
+import { TenantConnectionService } from '../../config/tenant-connection.service';
 import { DataSource } from 'typeorm';
 
 export interface TenantRequest extends Request {

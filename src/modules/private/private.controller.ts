@@ -1,12 +1,10 @@
-import { Body, Controller, Get, Req } from '@nestjs/common';
+import { Controller, Get, Req } from '@nestjs/common';
 import * as tenantContextMiddleware from 'src/common/middleware/tenant-context.middleware';
-import { UserService } from './user/user.service';
 
 @Controller('private')
 export class PrivateController {
-  constructor(private userService: UserService) {}
+  constructor() {}
 
-  // TO DO
   @Get('health')
   tenantHealth(@Req() req: tenantContextMiddleware.TenantRequest) {
     return {
@@ -19,17 +17,4 @@ export class PrivateController {
       timestamp: new Date().toISOString(),
     };
   }
-
-  // @Post('users')
-  // async createUser(
-  //   @Body() createUserDto: CreateTenantUserDto,
-  //   @Req() req: tenantContextMiddleware.TenantRequest,
-  // ) {
-  //   return this.userService.create(createUserDto, req.tenantConnection);
-  // }
-
-  // @Get('users')
-  // async getUsers(@Req() req: tenantContextMiddleware.TenantRequest) {
-  //   return this.userService.findAll(req.tenantConnection);
-  // }
 }
