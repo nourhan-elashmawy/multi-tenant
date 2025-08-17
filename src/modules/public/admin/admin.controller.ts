@@ -1,4 +1,4 @@
-import { Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './create-admin.dto';
 import { Admin } from './admin.entity';
@@ -8,7 +8,7 @@ export class AdminController {
   constructor(private adminService: AdminService) {}
 
   @Post('create')
-  async createAdmin(adminData: CreateAdminDto): Promise<Admin> {
+  async createAdmin(@Body() adminData: CreateAdminDto): Promise<Admin> {
     return await this.adminService.createAdmin(adminData);
   }
 }

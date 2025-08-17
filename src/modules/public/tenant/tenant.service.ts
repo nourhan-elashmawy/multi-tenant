@@ -9,6 +9,7 @@ import { Tenant } from './tenant.entity';
 import { TenantConnectionService } from '../../tenancy/tenant-connection.service';
 import { CreateTenantDto } from './create-tenant.dto';
 import { AdminService } from '../admin/admin.service';
+import { Admin } from '../admin/admin.entity';
 
 @Injectable()
 export class TenantService {
@@ -34,8 +35,10 @@ export class TenantService {
     if (!admin) throw new NotFoundException('Admin not found');
 
     const tenant = this.tenantRepository.create({
-      ...tenantData,
+      name: tenantData.name,
+      description: tenantData.description,
       schemaName: this.generateSchemaName(tenantData.name),
+      admin: { id: tenantData.adminId } as Admin,
     });
     const savedTenant = await this.tenantRepository.save(tenant);
 
@@ -47,6 +50,9 @@ export class TenantService {
   }
 
   private generateSchemaName(tenantName: string): string {
-    return tenantName.toLowerCase().replace(/\s+/g, '_');
+    return tenantName
+      .toLowerCase()
+      .replace(/['’]/g, '') // remove straight ' and curly ’
+      .replace(/\s+/g, '_');
   }
 }
