@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Post, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { CreateTenantWithAdminDto } from '../public/CreateTenantWithAdmin.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -15,10 +14,5 @@ export class AuthController {
   @Post('login')
   async login(@Body(ValidationPipe) loginData: LoginDto) {
     return this.authService.login(loginData);
-  }
-
-  @Post('registerTenant')
-  async register(@Body(ValidationPipe) registerData: CreateTenantWithAdminDto) {
-    return await this.authService.registerTenant(registerData);
   }
 }

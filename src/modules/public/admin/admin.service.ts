@@ -34,6 +34,10 @@ export class AdminService {
     return this.adminRepository.findOne({ where: { email } });
   }
 
+  async findById(id: number): Promise<Admin | null> {
+    return this.adminRepository.findOne({ where: { id } });
+  }
+
   async validatePassword(
     password: string,
     hashedPassword: string,

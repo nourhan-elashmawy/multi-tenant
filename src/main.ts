@@ -13,7 +13,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('multi-tenant', app, document, { useGlobalPrefix: true });
 
   await app.listen(process.env.PORT ?? 3000);
 }

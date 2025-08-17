@@ -27,6 +27,7 @@ export class TenantConnectionService implements OnModuleDestroy {
     return dataSource;
   }
 
+  // TO DO: remove this
   async createTenantSchema(tenantSchema: string): Promise<void> {
     const publicConnection = new DataSource(
       this.databaseConfig.getPublicConfig(),

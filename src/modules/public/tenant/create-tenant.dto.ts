@@ -1,15 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  Length,
-  Matches,
-} from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsInt, IsString, Length, Matches } from 'class-validator';
 
 import { TENANT_NAME_RULE } from 'src/common/constants/tenantName';
 
-// name, description, email
+// name, description, adminID
 export class CreateTenantDto {
   @ApiProperty({
     description:
@@ -39,10 +34,10 @@ export class CreateTenantDto {
   description: string;
 
   @ApiProperty({
-    description: 'Tenant email',
-    example: 'name@rose.com',
+    description: 'Admin id who owns/manages this tenant',
+    example: 1,
   })
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
+  @Type(() => Number)
+  @IsInt({ message: 'adminId must be an integer' })
+  adminId: number;
 }

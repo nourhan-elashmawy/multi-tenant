@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { AdminService } from '../public/admin/admin.service';
-import { CreateTenantWithAdminDto } from '../public/CreateTenantWithAdmin.dto';
 import { TenantService } from '../public/tenant/tenant.service';
 
 @Injectable()
@@ -40,20 +39,5 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
       admin: payload,
     };
-  }
-
-  async registerTenant(registerData: CreateTenantWithAdminDto) {
-    const userExists = await this.adminService.findByEmail(registerData.email);
-    if (userExists) {
-      throw new UnauthorizedException('Email already exists');
-    }
-
-    const { admin } =
-      await this.tenantService.createTenantWithAdmin(registerData);
-
-    return this.login({
-      email: admin.email,
-      password: registerData.password,
-    });
   }
 }

@@ -3,12 +3,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
 import { ADMIN_ROLES } from 'src/common/constants/enums';
+import { Tenant } from '../tenant/tenant.entity';
 
 @Entity('admins', { schema: 'public' })
 export class Admin {
@@ -32,6 +34,9 @@ export class Admin {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Tenant, (tenant) => tenant.admin)
+  tenants: Tenant[];
 
   @BeforeInsert()
   async hashPassword() {
