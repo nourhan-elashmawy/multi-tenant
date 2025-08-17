@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 
 @Injectable()
-export class DatabaseConfig {
+export default class DatabaseConfig implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
 
-  getConfig(schemaName: string = 'public') {
+  createTypeOrmOptions(schemaName: string = 'public'): TypeOrmModuleOptions {
     return {
       type: 'postgres' as const,
       host: this.configService.get<string>('DB_HOST', 'localhost'),
