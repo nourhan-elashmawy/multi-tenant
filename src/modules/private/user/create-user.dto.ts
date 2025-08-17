@@ -10,7 +10,7 @@ import {
   PASSWORD_RULE_MESSAGE,
 } from 'src/common/constants/passwords';
 
-export class CreateTenantUserDto {
+export class CreateUserDto {
   @IsString()
   @Length(2, 50, { message: 'Name must be between 2 and 50 characters' })
   name: string;

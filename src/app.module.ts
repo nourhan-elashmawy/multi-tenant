@@ -11,6 +11,7 @@ import { TenantContextMiddleware } from './common/middleware/tenant-context.midd
 import { DatabaseConfigModule } from './config/database.config.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './modules/auth/auth.module';
+import { PrivateModule } from './modules/private/private.module';
 
 @Module({
   imports: [
@@ -22,19 +23,23 @@ import { AuthModule } from './modules/auth/auth.module';
       name: 'public',
       imports: [DatabaseConfigModule],
       useFactory: (DatabaseConfig: DatabaseConfig) =>
-        DatabaseConfig.getPublicConfig(),
+        DatabaseConfig.getConfig(),
       inject: [DatabaseConfig],
+      // useFactory: () => {
+      //   return DatabaseConfig.getConfig();
+      // },
     }),
     TenancyModule,
     PublicModule,
+    PrivateModule,
     JwtModule,
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, DatabaseConfig],
+  providers: [AppService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(TenantContextMiddleware).forRoutes('tenant/*path');
+    consumer.apply(TenantContextMiddleware).forRoutes('private/*path');
   }
 }

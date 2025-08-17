@@ -18,7 +18,7 @@ export class TenantConnectionService implements OnModuleDestroy {
     }
 
     // Create new connection
-    const tenantConfig = this.databaseConfig.getTenantConfig(tenantSchema);
+    const tenantConfig = this.databaseConfig.getConfig(tenantSchema);
     const dataSource = new DataSource(tenantConfig);
 
     await dataSource.initialize();
@@ -29,9 +29,7 @@ export class TenantConnectionService implements OnModuleDestroy {
 
   // TO DO: remove this
   async createTenantSchema(tenantSchema: string): Promise<void> {
-    const publicConnection = new DataSource(
-      this.databaseConfig.getPublicConfig(),
-    );
+    const publicConnection = new DataSource(this.databaseConfig.getConfig());
     await publicConnection.initialize();
 
     const queryRunner = publicConnection.createQueryRunner();
