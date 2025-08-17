@@ -3,7 +3,7 @@ import { InjectRepository, InjectDataSource } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { Tenant } from './tenant.entity';
 import { TenantConnectionService } from '../../tenancy/tenant-connection.service';
-import { ROLES } from 'src/common/constants/enums';
+import { ADMIN_ROLES } from 'src/common/constants/enums';
 import { CreateTenantWithAdminDto } from '../CreateTenantWithAdmin.dto';
 import { Admin } from '../admin/admin.entity';
 
@@ -54,7 +54,7 @@ export class TenantService {
         name: dto.name,
         email: dto.email,
         password: dto.password,
-        role: ROLES.TENANT, // ensure your ROLES enum matches this
+        role: ADMIN_ROLES.TENANT, // ensure your ROLES enum matches this
       });
       const savedAdmin = await manager.getRepository(Admin).save(admin);
 

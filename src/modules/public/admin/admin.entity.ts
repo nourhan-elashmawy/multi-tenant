@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
-import { ROLES } from 'src/common/constants/enums';
+import { ADMIN_ROLES } from 'src/common/constants/enums';
 
 @Entity('admins', { schema: 'public' })
 export class Admin {
@@ -24,7 +24,7 @@ export class Admin {
   @Column({ length: 255 })
   password: string;
 
-  @Column({ type: 'enum', enum: ROLES })
+  @Column({ type: 'enum', enum: ADMIN_ROLES })
   role: string;
 
   @CreateDateColumn()

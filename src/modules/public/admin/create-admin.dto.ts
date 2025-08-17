@@ -6,7 +6,7 @@ import {
   Length,
   Matches,
 } from 'class-validator';
-import { ROLES } from 'src/common/constants/enums';
+import { ADMIN_ROLES } from 'src/common/constants/enums';
 import {
   PASSWORD_RULE,
   PASSWORD_RULE_MESSAGE,
@@ -43,10 +43,10 @@ export class CreateAdminDto {
 
   @ApiProperty({
     description: 'Role assigned to the admn',
-    enum: ROLES,
+    enum: ADMIN_ROLES,
     example: 'tenant_admin',
   })
   @IsNotEmpty()
-  @IsEnum(ROLES)
+  @IsEnum(ADMIN_ROLES)
   role: string;
 }
