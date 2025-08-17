@@ -54,7 +54,7 @@ export class TenantService {
         name: dto.name,
         email: dto.email,
         password: dto.password,
-        role: ADMIN_ROLES.TENANT, // ensure your ROLES enum matches this
+        role: ADMIN_ROLES.TENANT,
       });
       const savedAdmin = await manager.getRepository(Admin).save(admin);
 
