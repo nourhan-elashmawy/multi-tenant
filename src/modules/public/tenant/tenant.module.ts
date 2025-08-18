@@ -4,14 +4,10 @@ import { Tenant } from './tenant.entity';
 import { AdminModule } from '../admin/admin.module';
 import { TenantController } from './tenant.controller';
 import { TenantService } from './tenant.service';
-import { DatabaseConfigModule } from 'src/config/database.config.module';
+import { DatabaseModule } from 'src/config/database.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Tenant]),
-    AdminModule,
-    DatabaseConfigModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Tenant]), AdminModule, DatabaseModule],
   controllers: [TenantController],
   providers: [TenantService],
   exports: [TenantService],

@@ -8,7 +8,7 @@ import { TenantContextMiddleware } from './common/middleware/tenant-context.midd
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './modules/auth/auth.module';
 import { PrivateModule } from './modules/private/private.module';
-import { DatabaseConfigModule } from './config/database.config.module';
+import { DatabaseModule } from './config/database.module';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { DatabaseConfigModule } from './config/database.config.module';
       envFilePath: '.env.development',
       isGlobal: true,
     }),
-    DatabaseConfigModule,
+    DatabaseModule,
     JwtModule,
     PublicModule,
     PrivateModule,

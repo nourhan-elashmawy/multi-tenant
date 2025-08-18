@@ -4,21 +4,16 @@ import path from 'path';
 import { DataSource } from 'typeorm';
 import { DataSourceOptions } from 'typeorm/browser';
 
-export interface TennantConnection {
-  tenantId: string; // Is actually schema name
-  dataSource: DataSource;
-}
-
 @Injectable()
 export class TenantConnectionService {
   private tenantConnections = new Map<string, DataSource>();
 
   constructor(private configService: ConfigService) {}
 
-  async createTenantConnection(tenantId: string): Promise<DataSource> {
+  async createTenantConnection(tenantSchema: string): Promise<DataSource> {
     // Return existing connection if available
-    if (this.tenantConnections.has(tenantId)) {
-      const existingConnection = this.tenantConnections.get(tenantId);
+    if (this.tenantConnections.has(tenantSchema)) {
+      const existingConnection = this.tenantConnections.get(tenantSchema);
       if (existingConnection?.isInitialized) {
         return existingConnection;
       }
@@ -32,7 +27,7 @@ export class TenantConnectionService {
       username: this.configService.get('DB_USERNAME'),
       password: this.configService.get('DB_PASSWORD'),
       database: this.configService.get('DB_NAME'),
-      schema: tenantId,
+      schema: tenantSchema,
       entities: [
         path.join(__dirname, '../modules/private/**/*.entity{.ts,.js}'),
       ],
@@ -43,7 +38,7 @@ export class TenantConnectionService {
     const dataSource = new DataSource(connectionOptions);
     await dataSource.initialize();
 
-    this.tenantConnections.set(tenantId, dataSource);
+    this.tenantConnections.set(tenantSchema, dataSource);
 
     return dataSource;
   }
@@ -67,28 +62,28 @@ export class TenantConnectionService {
     await publicDataSource.destroy();
   }
 
-  async getTenantConnection(tenantId: string): Promise<DataSource> {
-    const connection = this.tenantConnections.get(tenantId);
+  async getTenantConnection(tenantSchema: string): Promise<DataSource> {
+    const connection = this.tenantConnections.get(tenantSchema);
 
     if (!connection || !connection.isInitialized) {
-      return this.createTenantConnection(tenantId);
+      return this.createTenantConnection(tenantSchema);
     }
 
     return connection;
   }
 
-  async closeTenantConnection(tenantId: string): Promise<void> {
-    const connection = this.tenantConnections.get(tenantId);
+  async closeTenantConnection(tenantSchema: string): Promise<void> {
+    const connection = this.tenantConnections.get(tenantSchema);
 
     if (connection && connection.isInitialized) {
       await connection.destroy();
-      this.tenantConnections.delete(tenantId);
+      this.tenantConnections.delete(tenantSchema);
     }
   }
 
   async closeAllConnections(): Promise<void> {
     const closePromises = Array.from(this.tenantConnections.keys()).map(
-      (tenantId) => this.closeTenantConnection(tenantId),
+      (tenantSchema) => this.closeTenantConnection(tenantSchema),
     );
 
     await Promise.all(closePromises);

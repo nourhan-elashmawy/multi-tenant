@@ -27,4 +27,4 @@ import path from 'path';
   providers: [TenantConnectionService],
   exports: [TenantConnectionService],
 })
-export class DatabaseConfigModule {}
+export class DatabaseModule {}
