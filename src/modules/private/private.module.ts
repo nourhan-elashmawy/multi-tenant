@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
-// import { DatabaseConfig } from 'src/config/database.config';
+import { PrivateController } from './private.controller';
 
 @Module({
   imports: [UserModule, ProductModule],
-  controllers: [],
-  providers: [],
-  exports: [],
+  controllers: [PrivateController],
 })
 export class PrivateModule {}

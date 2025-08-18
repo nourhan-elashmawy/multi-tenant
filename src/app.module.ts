@@ -1,16 +1,14 @@
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
-import DatabaseConfig from './config/database.config';
-import { TenancyModule } from './modules/tenancy/tenancy.module';
 import { PublicModule } from './modules/public/public.module';
 import { MiddlewareConsumer } from '@nestjs/common/interfaces';
 import { TenantContextMiddleware } from './common/middleware/tenant-context.middleware';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './modules/auth/auth.module';
 import { PrivateModule } from './modules/private/private.module';
+import { DatabaseConfigModule } from './config/database.config.module';
 
 @Module({
   imports: [
@@ -18,18 +16,10 @@ import { PrivateModule } from './modules/private/private.module';
       envFilePath: '.env.development',
       isGlobal: true,
     }),
-    TypeOrmModule.forRootAsync({
-      name: 'public',
-      useClass: DatabaseConfig,
-      inject: [DatabaseConfig],
-      // useFactory: () => {
-      //   return DatabaseConfig.getConfig();
-      // },
-    }),
-    TenancyModule,
+    DatabaseConfigModule,
+    JwtModule,
     PublicModule,
     PrivateModule,
-    JwtModule,
     AuthModule,
   ],
   controllers: [AppController],

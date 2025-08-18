@@ -1,8 +1,30 @@
 import { Module } from '@nestjs/common';
-import { DatabaseConfig } from './database.config';
+import { ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { TenantConnectionService } from './tenant-connection.service';
+import path from 'path';
 
 @Module({
-  providers: [DatabaseConfig],
-  exports: [DatabaseConfig],
+  imports: [
+    TypeOrmModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_NAME'),
+        schema: 'public',
+        entities: [
+          path.join(__dirname, '../modules/public/**/*.entity{.ts,.js}'),
+        ],
+        synchronize: true,
+        logging: true,
+      }),
+      inject: [ConfigService],
+    }),
+  ],
+  providers: [TenantConnectionService],
+  exports: [TenantConnectionService],
 })
 export class DatabaseConfigModule {}

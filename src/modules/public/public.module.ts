@@ -1,18 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Tenant } from './tenant/tenant.entity';
-import { Admin } from './admin/admin.entity';
-import { TenantService } from './tenant/tenant.service';
-import { TenancyModule } from '../tenancy/tenancy.module';
+import { TenantModule } from './tenant/tenant.module';
 import { PublicController } from './public.controller';
-import { AdminService } from './admin/admin.service';
-import { AdminController } from './admin/admin.controller';
-import { TenantController } from './tenant/tenant.controller';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Tenant, Admin], 'public'), TenancyModule],
-  providers: [TenantService, AdminService],
-  controllers: [PublicController, AdminController, TenantController],
-  exports: [TenantService, AdminService],
+  imports: [TenantModule, AdminModule],
+  controllers: [PublicController],
+  exports: [AdminModule, TenantModule],
 })
 export class PublicModule {}
