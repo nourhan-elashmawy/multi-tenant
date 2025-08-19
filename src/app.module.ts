@@ -8,9 +8,7 @@ import { TenantContextMiddleware } from './common/middleware/tenant-context.midd
 import { JwtModule } from '@nestjs/jwt';
 import { PrivateModule } from './modules/private/private.module';
 import { DatabaseModule } from './config/database.module';
-import { PublicAuthModule } from './modules/public/auth/auth.module';
-import { PrivateAuthModule } from './modules/private/auth/auth.module';
-
+import { AuthModule } from './modules/auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,14 +19,15 @@ import { PrivateAuthModule } from './modules/private/auth/auth.module';
     JwtModule,
     PublicModule,
     PrivateModule,
-    PublicAuthModule,
-    PrivateAuthModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(TenantContextMiddleware).forRoutes('private/*path');
+    consumer
+      .apply(TenantContextMiddleware)
+      .forRoutes('private/*path', '*path/private/*path');
   }
 }
