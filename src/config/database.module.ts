@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TenantConnectionService } from './tenant-connection.service';
-import path from 'path';
+import { Tenant } from 'src/modules/public/tenant/tenant.entity';
+import { Admin } from 'src/modules/public/admin/admin.entity';
 
 @Module({
   imports: [
@@ -15,9 +16,7 @@ import path from 'path';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         schema: 'public',
-        entities: [
-          path.join(__dirname, '../modules/public/**/*.entity{.ts,.js}'),
-        ],
+        entities: [Tenant, Admin],
         synchronize: true,
         logging: true,
       }),

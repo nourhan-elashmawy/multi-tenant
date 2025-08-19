@@ -1,10 +1,12 @@
 import {
   IsEmail,
+  IsEnum,
   IsOptional,
   IsString,
   Length,
   Matches,
 } from 'class-validator';
+import { USER_ROLES } from 'src/common/constants/enums';
 import {
   PASSWORD_RULE,
   PASSWORD_RULE_MESSAGE,
@@ -26,9 +28,6 @@ export class CreateUserDto {
   password: string;
 
   @IsOptional()
-  @IsString()
-  @Matches(/^(admin|user|manager)$/, {
-    message: 'Role must be admin, user, or manager',
-  })
-  role?: string = 'user';
+  @IsEnum(USER_ROLES, { message: 'Role must be admin, customer, or manager' })
+  role?: string;
 }

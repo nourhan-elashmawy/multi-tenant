@@ -26,6 +26,10 @@ export class AdminService {
     return savedAdmin;
   }
 
+  async getAllAdmins(): Promise<Admin[]> {
+    return this.adminRepository.find();
+  }
+
   async findByEmail(email: string): Promise<Admin | null> {
     return this.adminRepository.findOne({ where: { email } });
   }

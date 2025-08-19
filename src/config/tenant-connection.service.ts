@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import path from 'path';
 import { DataSource } from 'typeorm';
-import { DataSourceOptions } from 'typeorm/browser';
+import { DataSourceOptions } from 'typeorm';
 
 @Injectable()
 export class TenantConnectionService {
@@ -19,6 +19,9 @@ export class TenantConnectionService {
       }
     }
 
+    // Create new schema
+    await this.createSchemaIfNotExists(tenantSchema);
+
     // Create new connection
     const connectionOptions: DataSourceOptions = {
       type: 'postgres',
@@ -28,9 +31,7 @@ export class TenantConnectionService {
       password: this.configService.get('DB_PASSWORD'),
       database: this.configService.get('DB_NAME'),
       schema: tenantSchema,
-      entities: [
-        path.join(__dirname, '../modules/private/**/*.entity{.ts,.js}'),
-      ],
+      entities: [path.join(__dirname, '../modules/**/*.entity{.ts,.js}')],
       synchronize: true,
       logging: true,
     };
@@ -52,6 +53,8 @@ export class TenantConnectionService {
       password: this.configService.get('DB_PASSWORD'),
       database: this.configService.get('DB_NAME'),
       schema: 'public',
+      entities: [path.join(__dirname, '../modules/**/*.entity{.ts,.js}')],
+
       logging: false,
     });
 

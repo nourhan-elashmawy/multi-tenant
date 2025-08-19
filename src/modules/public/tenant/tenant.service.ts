@@ -46,6 +46,10 @@ export class TenantService {
     return savedTenant;
   }
 
+  async getAll(): Promise<Tenant[]> {
+    return this.tenantRepository.find();
+  }
+
   private generateSchemaName(tenantName: string): string {
     return tenantName
       .toLowerCase()

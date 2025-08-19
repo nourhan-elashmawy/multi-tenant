@@ -6,9 +6,10 @@ import { PublicModule } from './modules/public/public.module';
 import { MiddlewareConsumer } from '@nestjs/common/interfaces';
 import { TenantContextMiddleware } from './common/middleware/tenant-context.middleware';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthModule } from './modules/auth/auth.module';
 import { PrivateModule } from './modules/private/private.module';
 import { DatabaseModule } from './config/database.module';
+import { PublicAuthModule } from './modules/public/auth/auth.module';
+import { PrivateAuthModule } from './modules/private/auth/auth.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { DatabaseModule } from './config/database.module';
     JwtModule,
     PublicModule,
     PrivateModule,
-    AuthModule,
+    PublicAuthModule,
+    PrivateAuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

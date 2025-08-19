@@ -1,13 +1,15 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './create-user.dto';
 import { User } from './user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { TENANT_USER_REPOSITORY } from 'src/config/tenant-repo/tenant-rep.tokens';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
+    @Inject(TENANT_USER_REPOSITORY)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async create(userData: CreateUserDto): Promise<User> {
@@ -24,15 +26,18 @@ export class UserService {
     return saveduser;
   }
 
-  // async findAll(ds: DataSource): Promise<User[]> {
-  //   const repo = this.getRepo(ds);
-  //   return repo.find();
-  // }
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find();
+  }
 
-  // async findByEmail(ds: DataSource, email: string): Promise<User> {
-  //   const repo = this.getRepo(ds);
-  //   const user = await repo.findOne({ where: { email } });
-  //   if (!user) throw new NotFoundException('User not found');
-  //   return user;
-  // }
+  async findByEmail(email: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { email } });
+  }
+
+  async validatePassword(
+    password: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    return bcrypt.compare(password, hashedPassword);
+  }
 }

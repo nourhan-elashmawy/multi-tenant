@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { TENANT_ROLES } from 'src/common/constants/enums';
+import { USER_ROLES } from 'src/common/constants/enums';
 
 @Entity('users')
 export class User {
@@ -25,8 +25,8 @@ export class User {
 
   @Column({
     type: 'enum',
-    enum: TENANT_ROLES,
-    default: TENANT_ROLES.CUSTOMER,
+    enum: USER_ROLES,
+    default: USER_ROLES.CUSTOMER,
   })
   role: string;
 
