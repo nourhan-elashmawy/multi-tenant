@@ -29,6 +29,9 @@ export class Admin {
   @Column({ type: 'enum', enum: ADMIN_ROLES })
   role: string;
 
+  @Column({ default: true })
+  isActive: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 

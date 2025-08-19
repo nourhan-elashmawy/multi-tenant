@@ -34,6 +34,18 @@ export class UserService {
     return this.userRepository.findOne({ where: { email } });
   }
 
+  async findById(id: number): Promise<User | null> {
+    return this.userRepository.findOne({ where: { id } });
+  }
+
+  async isActive(id: number): Promise<boolean> {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      select: ['isActive'],
+    });
+    return !!user?.isActive;
+  }
+
   async validatePassword(
     password: string,
     hashedPassword: string,

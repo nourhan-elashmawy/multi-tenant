@@ -5,7 +5,7 @@ import { Module } from '@nestjs/common';
 import { PublicModule } from './modules/public/public.module';
 import { MiddlewareConsumer } from '@nestjs/common/interfaces';
 import { TenantContextMiddleware } from './common/middleware/tenant-context.middleware';
-import { JwtModule } from '@nestjs/jwt';
+// import { JwtModule } from '@nestjs/jwt';
 import { PrivateModule } from './modules/private/private.module';
 import { DatabaseModule } from './config/database.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -16,10 +16,10 @@ import { AuthModule } from './modules/auth/auth.module';
       isGlobal: true,
     }),
     DatabaseModule,
-    JwtModule,
+    // JwtModule,
+    AuthModule,
     PublicModule,
     PrivateModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

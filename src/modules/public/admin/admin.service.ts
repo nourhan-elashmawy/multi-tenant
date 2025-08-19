@@ -38,6 +38,14 @@ export class AdminService {
     return this.adminRepository.findOne({ where: { id } });
   }
 
+  async isActive(id: number): Promise<boolean> {
+    const user = await this.adminRepository.findOne({
+      where: { id },
+      select: ['isActive'],
+    });
+    return !!user?.isActive;
+  }
+
   async validatePassword(
     password: string,
     hashedPassword: string,
